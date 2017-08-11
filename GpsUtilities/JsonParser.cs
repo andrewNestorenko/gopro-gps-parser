@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace GpsUtilities
@@ -15,11 +16,17 @@ namespace GpsUtilities
                 );    
             }
             throw new FileNotFoundException();
-            
         }
+        
+        public static List<GpsPoint> GetGpsPoints(string filename)
+        {
+            var gpsData = ParseByFileName(filename);
+            return gpsData.data.Select(x => new GpsPoint(x.lat, x.lon, x.utc, x.spd)).ToList();    
+        }
+        
     }
 
-    public class GpsLine
+    public class JsonLine
     {
         public double lat;
         public double lon;
@@ -34,6 +41,6 @@ namespace GpsUtilities
 
     public class GpsData
     {
-        public List<GpsLine> data;
+        public List<JsonLine> data;
     }
 }
