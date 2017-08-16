@@ -11,13 +11,15 @@ namespace GpsUtilities
         public double Lon { get; }
         public long Utc;
         public double Speed;
+        public double Speed3D;
 
-        public GpsPoint(double lat, double lon, long utc, double spd )
+        public GpsPoint(double lat, double lon, long utc, double spd, double spd_3d )
         {
             Lat = lat;
             Lon = lon;
             Utc = utc;
             Speed = spd;
+            Speed = spd_3d;
         }
 
         public GpsPoint(double lat, double lon)
@@ -55,6 +57,7 @@ namespace GpsUtilities
         public readonly long Lon;
         public readonly long Utc;
         public readonly double Speed;
+        public readonly double Speed3D;
         public const int X = 10000000;
 
         public GpsPointScaled(GpsPoint p)
@@ -63,6 +66,7 @@ namespace GpsUtilities
             this.Lon = (long)(p.Lon*X);
             this.Utc = p.Utc;
             this.Speed = p.Speed;
+            this.Speed3D = p.Speed3D;
         }
 
         public GpsPointScaled(long Lat, long Lon)

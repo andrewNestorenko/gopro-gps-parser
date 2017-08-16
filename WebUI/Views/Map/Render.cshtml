@@ -1,0 +1,79 @@
+﻿@using GpsUtilities
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple Polylines</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="map" style="height: 600px; width: 700px;"></div>
+<table>
+    <tr>
+        <td>Fastest lap</td>
+        <td>@ViewBag.FasterLapTime</td>
+    </tr>
+</table>
+<script>
+
+    // This example creates a 2-pixel-wide red polyline showing the path of William
+    // Kingsford Smith's first trans-Pacific flight between Oakland, CA, and
+    // Brisbane, Australia.
+
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 133,
+            center: {lat: 50.373085,  lng: 30.464505},
+            mapTypeId: 'satellite'
+        });
+
+        var flightPlanCoordinates = [];
+        
+        @foreach (var p in ViewBag.Points)
+        {
+            <text>
+                flightPlanCoordinates.push({ lat: @p.Lat, lng: @p.Lon });
+            </text>  
+        }
+        
+        var flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: false,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+        
+        new google.maps.Polyline({
+            path: [{lat:50.373221, lng:30.464931}, {lat:50.3732507, lng:30.4650736}],
+            geodesic:false,
+            strokeColor: "#00FF00",
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        }).setMap(map);
+
+
+        flightPath.setMap(map);
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8RARaldwYhVvr6rm7GJC2lEivNMCK-uI&callback=initMap">
+</script>
+</body>
+</html>

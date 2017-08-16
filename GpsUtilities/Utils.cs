@@ -8,7 +8,7 @@ namespace GpsUtilities
         
         public const int UtcCoificient = 1000000;
         
-        private static bool OnSegment(GpsPoint p, GpsPoint q, GpsPoint r)
+        private static bool OnSegment(GpsPointScaled p, GpsPointScaled q, GpsPointScaled r)
         {
             return q.Lat <= Math.Max(p.Lat, r.Lat) && q.Lat >= Math.Min(p.Lat, r.Lat) &&
                    q.Lon <= Math.Max(p.Lon, r.Lon) && q.Lon >= Math.Min(p.Lon, r.Lon);
@@ -19,7 +19,7 @@ namespace GpsUtilities
         // 0 --> p, q and r are colinear
         // 1 --> Clockwise
         // 2 --> Counterclockwise
-        private static int Orientation(GpsPoint p, GpsPoint q, GpsPoint r)
+        private static int Orientation(GpsPointScaled p, GpsPointScaled q, GpsPointScaled r)
         {
             // See http://www.geeksforgeeks.org/orientation-3-ordered-points/
             // for details of below formula.
@@ -33,7 +33,7 @@ namespace GpsUtilities
 
         // The main function that returns true if line segment 'p1q1'
         // and 'p2q2' intersect.
-        public static bool DoIntersect(GpsPoint p1, GpsPoint q1, GpsPoint p2, GpsPoint q2)
+        public static bool DoIntersect(GpsPointScaled p1, GpsPointScaled q1, GpsPointScaled p2, GpsPointScaled q2)
         {
             // Find the four orientations needed for general and
             // special cases
@@ -64,7 +64,8 @@ namespace GpsUtilities
 
         public static bool DoIntersect(GpsLine p, GpsLine q)
         {
-            return DoIntersect(p.p1, p.p2, q.p1, q.p2);
+            
+            return DoIntersect(p.p1.ToScaled(), p.p2.ToScaled(), q.p1.ToScaled(), q.p2.ToScaled());
         }
 
         public static double DistanceTo(double lat1, double lon1, double lat2, double lon2, char unit = 'K')

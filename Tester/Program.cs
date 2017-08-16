@@ -3,20 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
-using System.Security.Principal;
 using GpsUtilities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Tester
 {
     class Program
     {
-                    
         private static readonly GpsLine StartLine = GetStartLine();
-
 
         private static readonly List<Tuple<GpsPoint, GpsPoint>> Sectors = new List<Tuple<GpsPoint, GpsPoint>>
         {
@@ -45,14 +39,17 @@ namespace Tester
         // Driver program to test above functions
         public static void Main(string[] args)
         {
-//            var files = Directory.GetFiles(@"D:\GoPro\Gonsalez11.01");
+            var dir = @"/Users/nestor/Dropbox/Projects/GpsUtilities/Source/Gonsalez_14_08_17";
+            var files = Directory.GetFiles(dir, "*.json", SearchOption.AllDirectories);
+            
 //            Array.Sort(files);
-//            foreach (var t in files)
-//            {
-//                Process(t);
+            foreach (var t in files)
+            {
+                Process(t);
 //                break;
-//            }
-            Process(@"/Volumes/N-Storage/GoPro/LC_9_08_17/quali.json");
+            }
+//            Process(@"/Users/nestor/Dropbox/pikulin_7.json");
+            Console.WriteLine("Process finished");
         }
 
         public static void Process(string filename)
@@ -84,24 +81,31 @@ namespace Tester
                     //calculate current lap time
                     var lapInfo = GetTimeByCrossedLine(StartLine, routeLine, startTime);    
                     startTime = lapInfo.Item2;    
-                    lapTime = lapInfo.Item1;    
+                    lapTime = lapInfo.Item1;
                 }
                     
                 lapsTime.Add(lapTime);
                 lapCounter++;
             }
 
-            var counter = 1;
-            Console.WriteLine($"{lapsTime.Count} laps found. Best: {lapsTime.Min()}");
-            var sum = new List<double>();
-            foreach (var time in lapsTime)
+//            var counter = 1;
+            var info = $"{Path.GetFileName(filename)}. {lapsTime.Count} laps found";
+            if (lapsTime.Count > 0)
             {
-                var diff = time - RealData[counter];
-                sum.Add(Math.Abs(diff));
-                Console.WriteLine($"Lap {counter}. Time {time}. Diff: {diff}");
-                counter++;
+                info += $" .Best: {lapsTime.Min()}";
             }
-            Console.WriteLine($"Total difference {sum.Sum()}. Max diff: {sum.Max()}");
+            Console.WriteLine(info);
+
+
+//            var sum = new List<double>();
+//            foreach (var time in lapsTime)
+//            {
+//                var diff = time - RealData[counter];
+//                sum.Add(Math.Abs(diff));
+//                Console.WriteLine($"Lap {counter}. Time {time}. Diff: {diff}");
+//                counter++;
+//            }
+//            Console.WriteLine($"Total difference {sum.Sum()}. Max diff: {sum.Max()}");
         }
 
         public static void PutDataToAggregator<T>(ref Dictionary<int, List<T>> aggregator, int lap, T data)
@@ -156,8 +160,8 @@ namespace Tester
 
         public static GpsLine GetStartLine()
         {
-//            return new GpsLine( new GpsPoint(50.373242, 30.464981), new GpsPoint(50.3732564,30.4650702));
-            return new GpsLine( new GpsPoint(50.373232, 30.464971), new GpsPoint(50.3732507, 30.4650736));
+//            return new GpsLine(new GpsPoint(50.373232, 30.464971), new GpsPoint(50.3732507, 30.4650736)); //original line
+            return new GpsLine(new GpsPoint(50.373221, 30.464931), new GpsPoint(50.3732507, 30.4650736)); //longer line
         }
     }
 }

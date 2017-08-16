@@ -21,7 +21,7 @@ namespace GpsUtilities
         public static List<GpsPoint> GetGpsPoints(string filename)
         {
             var gpsData = ParseByFileName(filename);
-            return gpsData.data.Select(x => new GpsPoint(x.lat, x.lon, x.utc, x.spd)).ToList();    
+            return gpsData.data.Select(x => new GpsPoint(x.lat, x.lon, x.utc, x.spd, x.spd_3d)).ToList();    
         }
         
     }
